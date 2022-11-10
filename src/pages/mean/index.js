@@ -1,5 +1,5 @@
+import { Button, Col, Form, InputNumber, Row, Select, Typography } from 'antd';
 import React, { useState } from 'react';
-import { Button, Card, Form, Input, InputNumber, Select } from 'antd';
 
 import PageLayout from '../../components/layout';
 
@@ -21,6 +21,17 @@ function Mean() {
   ];
 
   const { Option } = Select;
+  const { Title } = Typography;
+
+  const colSize = { xs: 10, sm: 5, md: 4, lg: 4, xl: 3, xxl: 2 };
+  const colSizeConfigFields = {
+    xs: 24,
+    sm: 10,
+    md: 7,
+    lg: 7,
+    xl: 6,
+    xxl: 4
+  };
 
   const fieldsAmountFinish = values => {
     setFieldsAmount(values.inputsAmount);
@@ -87,34 +98,45 @@ function Mean() {
         autoComplete="off"
         onFinish={fieldsAmountFinish}
       >
-        <Form.Item
-          name="inputsAmount"
-          label="Quantidade de entradas"
-          rules={[
-            {
-              required: true,
-              message: 'Campo obrigatório!'
-            }
-          ]}
-        >
-          <InputNumber min={1} max={10} />
-        </Form.Item>
-        <Form.Item
-          name="meanType"
-          label="Tipo de média"
-          rules={[
-            {
-              required: true,
-              message: 'Campo obrigatório!'
-            }
-          ]}
-        >
-          <Select placeholder="Selecione">
-            {meanOptions.map((item, index) => (
-              <Option value={index}>{item}</Option>
-            ))}
-          </Select>
-        </Form.Item>
+        <Row gutter={[12, 0]}>
+          <Col {...colSizeConfigFields}>
+            <Form.Item
+              name="inputsAmount"
+              label="Quantidade de entradas"
+              rules={[
+                {
+                  required: true,
+                  message: 'Campo obrigatório!'
+                }
+              ]}
+            >
+              <InputNumber min={1} max={10} />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={[12, 0]}>
+          <Col {...colSizeConfigFields}>
+            <Form.Item
+              name="meanType"
+              label="Tipo de média"
+              rules={[
+                {
+                  required: true,
+                  message: 'Campo obrigatório!'
+                }
+              ]}
+            >
+              <Select placeholder="Selecione">
+                {meanOptions.map((item, index) => (
+                  <Option key={index} value={index}>
+                    {item}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
+        </Row>
       </Form>
       <Button
         type="primary"
@@ -139,35 +161,39 @@ function Mean() {
             </b>
             {fieldsArray.map((_, index) => (
               <div key={index}>
-                <b>
-                  <h4>dado {index}:</h4>
-                </b>
-                <Form.Item
-                  name={`entry${index}`}
-                  label="entrada"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Campo obrigatório!'
-                    }
-                  ]}
-                >
-                  <InputNumber />
-                </Form.Item>
-                {chosenMean >= 3 && (
-                  <Form.Item
-                    name={`weight${index}`}
-                    label="peso"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Campo obrigatório!'
-                      }
-                    ]}
-                  >
-                    <InputNumber />
-                  </Form.Item>
-                )}
+                <Title level={5}>Dado {index + 1}:</Title>
+                <Row gutter={[12, 0]}>
+                  <Col {...colSize}>
+                    <Form.Item
+                      name={`entry${index}`}
+                      label="entrada"
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Campo obrigatório!'
+                        }
+                      ]}
+                    >
+                      <InputNumber />
+                    </Form.Item>
+                  </Col>
+                  <Col {...colSize}>
+                    {chosenMean >= 3 && (
+                      <Form.Item
+                        name={`weight${index}`}
+                        label="peso"
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Campo obrigatório!'
+                          }
+                        ]}
+                      >
+                        <InputNumber />
+                      </Form.Item>
+                    )}
+                  </Col>
+                </Row>
               </div>
             ))}
           </Form>
