@@ -154,7 +154,7 @@ function Mean() {
                 >
                   <InputNumber />
                 </Form.Item>
-                {chosenMean >= 4 && (
+                {chosenMean >= 3 && (
                   <Form.Item
                     name={`weight${index}`}
                     label="peso"
