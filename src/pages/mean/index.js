@@ -1,4 +1,15 @@
-import { Button, Col, Form, InputNumber, Row, Select, Typography } from 'antd';
+import { InfoCircleOutlined } from '@ant-design/icons';
+import {
+  Button,
+  Col,
+  Form,
+  InputNumber,
+  Row,
+  Select,
+  Tooltip,
+  Typography
+} from 'antd';
+
 import React, { useState } from 'react';
 
 import PageLayout from '../../components/layout';
@@ -55,8 +66,23 @@ function Mean() {
     // função calcula e devolve o resultado
     let result = 0;
     switch (chosenMean) {
+      case 0:
+        result = calculateAritmeticMean(Object.entries(values));
+        break;
+      case 1:
+        result = calculateGeometricMean(Object.entries(values));
+        break;
+      case 2:
+        result = calculateHarmonicMean(Object.entries(values));
+        break;
+      case 3:
+        result = calculateWeightedAritmeticMean(Object.entries(values));
+        break;
       case 4:
         result = calculateWeightedGeometricMean(Object.entries(values));
+        break;
+      case 5:
+        result = calculateWeightedHarmonicMean(Object.entries(values));
         break;
 
       default:
@@ -67,7 +93,7 @@ function Mean() {
     setResult(result);
   };
 
-  const calculateWeightedGeometricMean = entries => {
+  const getEntriesAndWeightsSum = entries => {
     let entriesSum = 0;
     let weightsSum = 0;
 
@@ -76,6 +102,63 @@ function Mean() {
         ? (entriesSum += item[1])
         : (weightsSum += item[1])
     );
+
+    return [entriesSum, weightsSum];
+  };
+
+  const calculateAritmeticMean = entries => {
+    const [entriesSum, _] = getEntriesAndWeightsSum(entries);
+
+    const result = entriesSum / formFieldsAmount.getFieldValue('inputsAmount');
+
+    return result;
+  };
+
+  const calculateGeometricMean = entries => {
+    let entriesMult = 1;
+
+    entries.map(item =>
+      item[0].startsWith('entry') ? (entriesMult *= item[1]) : ''
+    );
+
+    // raiz N da multiplicacao das entradas
+    const result =
+      entriesMult ** (1 / formFieldsAmount.getFieldValue('inputsAmount'));
+    console.log(result);
+
+    return result;
+  };
+
+  const calculateHarmonicMean = entries => {
+    let inverseEntriesSum = 0;
+    entries.map(item =>
+      item[0].startsWith('entry') ? (inverseEntriesSum += 1 / item[1]) : ''
+    );
+
+    const result =
+      formFieldsAmount.getFieldValue('inputsAmount') / inverseEntriesSum;
+
+    return result;
+  };
+
+  const calculateWeightedAritmeticMean = entries => {
+    const [_, weightsSum] = getEntriesAndWeightsSum(entries);
+
+    let firstStep = 0;
+    let aux = 0;
+
+    for (let i = 0; i < entries.length; i += 2) {
+      aux = entries[i][1] * entries[i + 1][1];
+      firstStep += aux;
+    }
+
+    const result = firstStep / weightsSum;
+
+    return result;
+  };
+
+  const calculateWeightedGeometricMean = entries => {
+    const [_, weightsSum] = getEntriesAndWeightsSum(entries);
 
     let firstStep = 1;
     let aux = 0;
@@ -86,6 +169,21 @@ function Mean() {
     }
 
     const result = firstStep ** (1 / weightsSum);
+
+    return result;
+  };
+
+  const calculateWeightedHarmonicMean = entries => {
+    const [_, weightsSum] = getEntriesAndWeightsSum(entries);
+
+    let inverseSumWeighted = 0;
+
+    for (let i = 0; i < entries.length; i += 2) {
+      const aux = entries[i + 1][1] / entries[i][1];
+      inverseSumWeighted += aux;
+    }
+
+    const result = weightsSum / inverseSumWeighted;
 
     return result;
   };
@@ -110,7 +208,7 @@ function Mean() {
                 }
               ]}
             >
-              <InputNumber min={1} max={10} />
+              <InputNumber min={2} max={10} />
             </Form.Item>
           </Col>
         </Row>
@@ -144,9 +242,16 @@ function Mean() {
         onClick={() => {
           formFieldsAmount.submit();
         }}
+        style={{ marginRight: '1rem' }}
       >
         Gerar campos
       </Button>
+      <Tooltip
+        title="Este botão irá gerar os campos necessários de acordo com a quantidade de entradas que você definiu. Sempre que você mudar o tipo de média deve gerar novos campos!"
+        description="spo"
+      >
+        <InfoCircleOutlined />
+      </Tooltip>
       {fieldsAmount > 0 && (
         <>
           <Form
