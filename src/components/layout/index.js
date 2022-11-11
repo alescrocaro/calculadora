@@ -2,12 +2,14 @@ import React from 'react';
 import './style.css';
 
 import {
+  GithubOutlined,
+  InstagramOutlined,
   UploadOutlined,
   UserOutlined,
   VideoCameraOutlined
 } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Footer, Sider } = Layout;
 
 const MyLayout = ({ children }) => (
   <Layout style={{ minHeight: '100vh' }}>
@@ -56,7 +58,32 @@ const MyLayout = ({ children }) => (
           textAlign: 'center'
         }}
       >
-        Ant Design ©2018 Created by Ant UED
+        cREATED BY alescrocaro
+        <a
+          href={'https://www.instagram.com/leju0/'}
+          target="_blank"
+          rel="noreferrer"
+          style={{
+            textDecoration: 'none',
+            color: 'black',
+            width: 'fit-content',
+            marginInline: '0.5rem'
+          }}
+        >
+          <InstagramOutlined />
+        </a>
+        <a
+          href={'https://www.github.com/alescrocaro/'}
+          target="_blank"
+          rel="noreferrer"
+          style={{
+            textDecoration: 'none',
+            color: 'black',
+            width: 'fit-content'
+          }}
+        >
+          <GithubOutlined />
+        </a>
       </Footer>
     </Layout>
   </Layout>
